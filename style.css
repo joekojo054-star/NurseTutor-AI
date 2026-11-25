@@ -338,3 +338,117 @@ footer p + p {
     padding: 18px;
   }
   }
+/* =====================================
+   NURSETUTOR AI - INTERACTIVE FEATURES
+===================================== */
+
+.action-button,
+.back-button {
+  display: inline-block;
+  border: none;
+  border-radius: 9px;
+  padding: 12px 20px;
+  margin: 12px 5px 12px 0;
+  background: var(--secondary);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.action-button:hover,
+.back-button:hover {
+  background: var(--primary);
+  transform: translateY(-2px);
+}
+
+.back-button {
+  background: #64748b;
+}
+
+#tutorInput {
+  width: 100%;
+  max-width: 550px;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  margin: 15px 0;
+  font-size: 15px;
+}
+
+#tutorInput:focus {
+  outline: 2px solid var(--accent);
+}
+
+.learning-result {
+  background: #f7fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 19px;
+  margin: 17px 0;
+}
+
+.learning-result h3 {
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.learning-result p {
+  color: #526477;
+  margin: 7px 0;
+  white-space: normal;
+}
+
+.topic-category {
+  color: var(--secondary);
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.quiz-progress {
+  color: var(--secondary);
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+#quizArea h3 {
+  margin: 15px 0;
+  color: var(--primary);
+}
+
+.quiz-option {
+  display: block;
+  padding: 13px;
+  margin: 10px 0;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+  background: white;
+}
+
+.quiz-option:hover {
+  background: #edf7f7;
+  border-color: var(--accent);
+}
+
+.quiz-option input {
+  margin-right: 9px;
+  accent-color: var(--secondary);
+}
+
+.quiz-score {
+  color: var(--accent);
+  font-size: 28px;
+  margin: 15px 0;
+}
+
+#materialsList {
+  margin-top: 15px;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+   }
