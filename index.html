@@ -4,119 +4,233 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#10213b">
-  <meta name="description" content="NurseTutor AI - Offline-first learning and examination preparation for Registered General Nursing students in Ghana.">
-  <title>NurseTutor AI | Learn Nursing</title>
+
+  <meta name="theme-color" content="#102b46">
+  <meta name="author" content="JOE TECH">
+  <meta name="description" content="NurseTutor AI - A nursing education and examination preparation platform for Registered General Nursing students in Ghana.">
+
+  <title>NurseTutor AI | Ghana Nursing Learning Platform</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="brand-icon">✚</span>
-      <div>
-        <h1>NurseTutor AI</h1>
-        <p>Learn nursing. Build confidence. Excel.</p>
-      </div>
-    </div>
-    <span class="status" id="systemStatus">Offline Learning</span>
-  </header>
 
-  <main class="container">
-    <section class="welcome">
-      <div>
-        <p class="eyebrow">REGISTERED GENERAL NURSING</p>
-        <h2>Welcome to your nursing learning space.</h2>
-        <p>Study nursing concepts, practise examination questions and track your learning progress.</p>
-      </div>
-      <div class="welcome-icon">🩺</div>
-    </section>
+  <div class="app-shell">
 
-    <section class="dashboard">
-      <div class="stat-card">
-        <span>📚</span>
-        <h3 id="topicsCount">0</h3>
-        <p>Study topics</p>
-      </div>
-      <div class="stat-card">
-        <span>❓</span>
-        <h3 id="questionsCount">0</h3>
-        <p>Practice questions</p>
-      </div>
-      <div class="stat-card">
-        <span>🏆</span>
-        <h3 id="completedCount">0</h3>
-        <p>Quizzes completed</p>
-      </div>
-    </section>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-    <section class="section">
-      <div class="section-heading">
+      <div class="brand">
+        <span class="brand-icon">✚</span>
+
         <div>
-          <p class="eyebrow">YOUR LEARNING CENTRE</p>
-          <h2>What would you like to do?</h2>
+          <h1>NurseTutor AI</h1>
+          <p>GHANA NURSING EDUCATION</p>
         </div>
       </div>
 
-      <div class="feature-grid">
+      <div class="sidebar-label">LEARNING MENU</div>
+
+      <nav class="feature-grid" aria-label="Learning navigation">
+
         <button class="feature-card" data-section="tutor">
           <span class="feature-icon">🤖</span>
-          <h3>Nursing Tutor</h3>
-          <p>Explore nursing concepts and explanations.</p>
+          <span class="feature-text">
+            <strong>Nursing Tutor</strong>
+            <small>Learn nursing concepts</small>
+          </span>
         </button>
 
         <button class="feature-card" data-section="materials">
-          <span class="feature-icon">📖</span>
-          <h3>Study Materials</h3>
-          <p>Explore organised nursing learning topics.</p>
+          <span class="feature-icon">📚</span>
+          <span class="feature-text">
+            <strong>Study Materials</strong>
+            <small>Explore learning topics</small>
+          </span>
         </button>
 
         <button class="feature-card" data-section="quiz">
           <span class="feature-icon">✍️</span>
-          <h3>Quiz Centre</h3>
-          <p>Practise questions and check your answers.</p>
+          <span class="feature-text">
+            <strong>Quiz Centre</strong>
+            <small>Test your knowledge</small>
+          </span>
         </button>
 
         <button class="feature-card" data-section="progress">
           <span class="feature-icon">📊</span>
-          <h3>My Progress</h3>
-          <p>Review your learning and quiz performance.</p>
+          <span class="feature-text">
+            <strong>My Progress</strong>
+            <small>Track your learning</small>
+          </span>
         </button>
 
         <button class="feature-card" data-section="clinical">
           <span class="feature-icon">🩺</span>
-          <h3>Clinical Learning</h3>
-          <p>Study foundational clinical principles.</p>
+          <span class="feature-text">
+            <strong>Clinical Learning</strong>
+            <small>Explore clinical principles</small>
+          </span>
         </button>
 
         <button class="feature-card" data-section="about">
           <span class="feature-icon">ℹ️</span>
-          <h3>About NurseTutor</h3>
-          <p>Learn how to use this educational platform.</p>
+          <span class="feature-text">
+            <strong>About Platform</strong>
+            <small>Learn about NurseTutor</small>
+          </span>
         </button>
+
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="status" id="systemStatus">
+          Offline Learning
+        </span>
+        <p>Developed by <strong>JOE TECH</strong></p>
       </div>
-    </section>
 
-    <section class="workspace" id="workspace">
-      <div class="empty-state">
-        <span>🎓</span>
-        <h2>Your learning journey starts here.</h2>
-        <p>Select a learning feature above to get started.</p>
-      </div>
-    </section>
+    </aside>
 
-    <section class="safety-note">
-      <strong>Important learning notice</strong>
-      <p>NurseTutor AI is an educational support tool. Its content does not replace approved nursing curricula, qualified lecturers, clinical supervision or professional medical guidance.</p>
-    </section>
-  </main>
 
-  <footer>
-    <p>© 2026 NurseTutor AI. Built for nursing education.</p>
-    <p>Registered General Nursing · Ghana</p>
-  </footer>
+    <!-- MAIN APPLICATION -->
+    <main class="main-content">
+
+      <header class="topbar">
+
+        <div>
+          <p class="eyebrow">REGISTERED GENERAL NURSING</p>
+          <h2>Learning Dashboard</h2>
+        </div>
+
+        <div class="topbar-badge">
+          <span class="online-dot"></span>
+          Learning Centre
+        </div>
+
+      </header>
+
+
+      <!-- WELCOME SECTION -->
+      <section class="welcome">
+
+        <div>
+          <p class="eyebrow">YOUR NURSING JOURNEY</p>
+
+          <h2>Learn with confidence.<br>Grow into excellence.</h2>
+
+          <p>
+            Build your nursing knowledge, practise examination
+            questions and strengthen your understanding of
+            essential nursing concepts.
+          </p>
+        </div>
+
+        <div class="welcome-icon">🩺</div>
+
+      </section>
+
+
+      <!-- DASHBOARD STATISTICS -->
+      <section class="dashboard">
+
+        <div class="stat-card">
+          <span>📚</span>
+          <div>
+            <h3 id="topicsCount">0</h3>
+            <p>Study Topics</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span>❓</span>
+          <div>
+            <h3 id="questionsCount">0</h3>
+            <p>Practice Questions</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <span>🏆</span>
+          <div>
+            <h3 id="completedCount">0</h3>
+            <p>Quizzes Completed</p>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- LEARNING WORKSPACE -->
+      <section class="workspace-section">
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">LEARNING WORKSPACE</p>
+            <h2>Your Learning Centre</h2>
+          </div>
+        </div>
+
+        <section class="workspace" id="workspace">
+
+          <div class="empty-state">
+            <span>🎓</span>
+
+            <h2>Welcome to NurseTutor AI</h2>
+
+            <p>
+              Select a learning feature from the navigation
+              panel to begin your learning session.
+            </p>
+          </div>
+
+        </section>
+
+      </section>
+
+
+      <!-- EDUCATIONAL NOTICE -->
+      <section class="safety-note">
+
+        <strong>Educational Notice</strong>
+
+        <p>
+          NurseTutor AI supports nursing education. It does not
+          replace approved nursing curricula, qualified lecturers,
+          clinical supervision or professional medical guidance.
+          Clinical procedures must be learned under appropriate
+          professional supervision.
+        </p>
+
+      </section>
+
+
+      <!-- FOOTER -->
+      <footer class="main-footer">
+
+        <div>
+          <strong>NurseTutor AI</strong>
+          <p>Supporting the next generation of nursing professionals.</p>
+        </div>
+
+        <div class="creator-credit">
+          <span>Created & Developed by</span>
+          <strong>JOE TECH</strong>
+        </div>
+
+        <p class="copyright">
+          © 2026 NurseTutor AI. All rights reserved.
+        </p>
+
+      </footer>
+
+    </main>
+
+  </div>
 
   <script src="script.js"></script>
+
 </body>
-        </html>
-            
+                                            </html>
+  
