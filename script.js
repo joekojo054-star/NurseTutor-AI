@@ -3,7 +3,7 @@
    NURSETUTOR AI
    PROFESSIONAL OFFLINE LEARNING ENGINE
    Created & Developed by JOE TECH
-   Version 2.0
+   Version 2.1
 ========================================= */
 
 const $ = id => document.getElementById(id);
@@ -156,6 +156,118 @@ protocols.
 ];
 
 // =========================================
+// NURSING GLOSSARY DATABASE
+// =========================================
+
+const nursingGlossary = [
+  {
+    term: "Asepsis",
+    category: "Infection Prevention",
+    definition: "Practices used to prevent contamination by harmful microorganisms."
+  },
+  {
+    term: "Antiseptic",
+    category: "Infection Prevention",
+    definition: "A substance applied to living tissue to reduce or prevent the growth of microorganisms."
+  },
+  {
+    term: "Pathogen",
+    category: "Infection Prevention",
+    definition: "A microorganism or infectious agent capable of causing disease."
+  },
+  {
+    term: "Hand Hygiene",
+    category: "Infection Prevention",
+    definition: "Cleaning the hands using appropriate handwashing or hand-rub methods to reduce the spread of microorganisms."
+  },
+  {
+    term: "Vital Signs",
+    category: "Basic Nursing",
+    definition: "Measurements used to assess important body functions, including temperature, pulse, respiration and blood pressure."
+  },
+  {
+    term: "Pulse",
+    category: "Basic Nursing",
+    definition: "The rhythmic expansion of an artery caused by the heartbeat."
+  },
+  {
+    term: "Respiration",
+    category: "Basic Nursing",
+    definition: "The process of breathing, involving the movement of air into and out of the lungs."
+  },
+  {
+    term: "Blood Pressure",
+    category: "Basic Nursing",
+    definition: "The force exerted by circulating blood against the walls of blood vessels."
+  },
+  {
+    term: "Oxygen Saturation",
+    category: "Basic Nursing",
+    definition: "An estimate of the percentage of haemoglobin carrying oxygen in the blood."
+  },
+  {
+    term: "Nursing Assessment",
+    category: "Nursing Practice",
+    definition: "The systematic collection and evaluation of information about a patient's health."
+  },
+  {
+    term: "Patient Advocacy",
+    category: "Nursing Practice",
+    definition: "Supporting and protecting patients' rights, dignity, preferences and interests."
+  },
+  {
+    term: "Documentation",
+    category: "Nursing Practice",
+    definition: "The accurate and timely recording of relevant patient care information."
+  },
+  {
+    term: "Therapeutic Communication",
+    category: "Nursing Practice",
+    definition: "Purposeful communication that helps build trust and understand a patient's needs."
+  },
+  {
+    term: "Confidentiality",
+    category: "Professional Ethics",
+    definition: "The responsibility to protect private patient information from unauthorised disclosure."
+  },
+  {
+    term: "Informed Consent",
+    category: "Professional Ethics",
+    definition: "Voluntary agreement to care or treatment after receiving relevant information and understanding the available choices."
+  },
+  {
+    term: "Empathy",
+    category: "Professional Ethics",
+    definition: "The ability to understand and respond sensitively to another person's feelings and experiences."
+  },
+  {
+    term: "Edema",
+    category: "Clinical Terminology",
+    definition: "Swelling caused by an accumulation of fluid in body tissues."
+  },
+  {
+    term: "Cyanosis",
+    category: "Clinical Terminology",
+    definition: "A bluish discolouration of the skin or mucous membranes that may indicate inadequate oxygenation."
+  },
+  {
+    term: "Dyspnea",
+    category: "Clinical Terminology",
+    definition: "A subjective feeling of difficulty or discomfort when breathing."
+  },
+  {
+    term: "Tachycardia",
+    category: "Clinical Terminology",
+    definition: "A heart rate that is faster than the expected range for the person's age and circumstances."
+  },
+  {
+    term: "Bradycardia",
+    category: "Clinical Terminology",
+    definition: "A heart rate that is slower than the expected range for the person's age and circumstances."
+  }
+];
+
+// =========================================
 // QUESTION BANK
 // =========================================
 
@@ -245,6 +357,7 @@ function updateDashboard() {
 const sections = {
   tutor: showTutor,
   materials: showMaterials,
+  glossary: showGlossary,
   quiz: showQuiz,
   progress: showProgress,
   clinical: showClinical,
@@ -318,6 +431,7 @@ function openSection(section) {
   const titles = {
     tutor: "Nursing Tutor",
     materials: "Study Materials",
+    glossary: "Nursing Glossary",
     quiz: "Quiz Centre",
     progress: "My Learning Progress",
     clinical: "Clinical Learning",
@@ -462,6 +576,104 @@ function showTopic(id) {
   `, showMaterials);
 
   $("topicContent").textContent = topic.content;
+}
+
+// =========================================
+// NURSING GLOSSARY
+// =========================================
+
+function showGlossary() {
+  const categories = [
+    "All Categories",
+    ...new Set(nursingGlossary.map(item => item.category))
+  ];
+
+  renderWorkspace(`
+    <h2>📖 Nursing Glossary</h2>
+
+    <p>Search nursing terms and explore their meanings.</p>
+
+    <input
+      type="search"
+      id="glossarySearch"
+      placeholder="Search a nursing term..."
+      aria-label="Search nursing glossary"
+    >
+
+    <select
+      id="glossaryCategory"
+      aria-label="Filter glossary by category"
+    ></select>
+
+    <p id="glossaryCount"></p>
+
+    <div id="glossaryResults"></div>
+  `);
+
+  const search = $("glossarySearch");
+  const category = $("glossaryCategory");
+  const container = $("glossaryResults");
+
+  categories.forEach(item => {
+    const option = document.createElement("option");
+    option.value = item;
+    option.textContent = item;
+    category.appendChild(option);
+  });
+
+  function displayGlossary() {
+    const query = search.value.trim().toLowerCase();
+    const selectedCategory = category.value;
+
+    const results = nursingGlossary.filter(item => {
+      const matchesSearch =
+        item.term.toLowerCase().includes(query) ||
+        item.definition.toLowerCase().includes(query);
+
+      const matchesCategory =
+        selectedCategory === "All Categories" ||
+        item.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+
+    $("glossaryCount").textContent =
+      `${results.length} term(s) found`;
+
+    container.replaceChildren();
+
+    if (!results.length) {
+      const message = document.createElement("div");
+      message.className = "learning-result";
+      message.textContent =
+        "No matching terms found. Try another search.";
+      container.appendChild(message);
+      return;
+    }
+
+    results.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "learning-result";
+
+      const heading = document.createElement("h3");
+      heading.textContent = item.term;
+
+      const label = document.createElement("p");
+      label.className = "topic-category";
+      label.textContent = item.category;
+
+      const definition = document.createElement("p");
+      definition.textContent = item.definition;
+
+      card.append(heading, label, definition);
+      container.appendChild(card);
+    });
+  }
+
+  search.addEventListener("input", displayGlossary);
+  category.addEventListener("change", displayGlossary);
+
+  displayGlossary();
 }
 
 // =========================================
@@ -707,7 +919,7 @@ function showAbout() {
     <div class="learning-result">
       <h3>Learning Features</h3>
       <p>Study materials, topic exploration, practice
-      questions and learning progress tracking.</p>
+      questions, nursing glossary and learning progress tracking.</p>
     </div>
 
     <div class="learning-result">
@@ -741,6 +953,5 @@ updateDashboard();
 showDashboard();
 
 console.log(
-  "NurseTutor AI Version 2.0 loaded successfully."
+  "NurseTutor AI Version 2.1 loaded successfully."
 );
-       
