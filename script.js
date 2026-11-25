@@ -1,16 +1,44 @@
 
 /* =========================================
-   NURSETUTOR AI - OFFLINE LEARNING ENGINE
-   Version 1.0
+   NURSETUTOR AI
+   PROFESSIONAL OFFLINE LEARNING ENGINE
+   Created & Developed by JOE TECH
+   Version 2.0
 ========================================= */
 
 const $ = id => document.getElementById(id);
 
 const STORAGE_KEY = "nurseTutorAI_progress";
 
-let progress = JSON.parse(
-  localStorage.getItem(STORAGE_KEY) || '{"completedQuizzes":0,"quizHistory":[]}'
-);
+let progress;
+
+try {
+  progress = JSON.parse(
+    localStorage.getItem(STORAGE_KEY) ||
+    '{"completedQuizzes":0,"quizHistory":[]}'
+  );
+} catch (error) {
+  progress = {
+    completedQuizzes: 0,
+    quizHistory: []
+  };
+}
+
+if (
+  !progress ||
+  typeof progress !== "object" ||
+  !Array.isArray(progress.quizHistory)
+) {
+  progress = {
+    completedQuizzes: 0,
+    quizHistory: []
+  };
+}
+
+progress.completedQuizzes =
+  Number(progress.completedQuizzes) || 0;
+
+let currentSection = null;
 
 // =========================================
 // NURSING LEARNING CONTENT
@@ -23,21 +51,21 @@ const nursingTopics = [
     category: "Fundamentals of Nursing",
     description: "Explore the meaning, purpose and fundamental principles of nursing.",
     content: `
-      Nursing is a profession focused on promoting health,
-      preventing illness, supporting recovery and providing
-      compassionate care.
+Nursing is a profession focused on promoting health,
+preventing illness, supporting recovery and providing
+compassionate care.
 
-      Important areas include:
-      • Health promotion
-      • Disease prevention
-      • Patient education
-      • Nursing assessment
-      • Patient advocacy
-      • Safe and respectful care
+Important areas include:
+• Health promotion
+• Disease prevention
+• Patient education
+• Nursing assessment
+• Patient advocacy
+• Safe and respectful care
 
-      Nursing practice requires professional knowledge,
-      ethical conduct, communication and teamwork.
-    `
+Nursing practice requires professional knowledge,
+ethical conduct, communication and teamwork.
+`
   },
   {
     id: 2,
@@ -45,20 +73,20 @@ const nursingTopics = [
     category: "Fundamentals of Nursing",
     description: "Learn the principles of preventing and controlling infections.",
     content: `
-      Infection prevention and control involves practices
-      that reduce the spread of microorganisms.
+Infection prevention and control involves practices
+that reduce the spread of microorganisms.
 
-      Important principles include:
-      • Hand hygiene
-      • Appropriate use of personal protective equipment
-      • Safe handling of equipment
-      • Environmental cleanliness
-      • Safe waste disposal
-      • Standard precautions
+Important principles include:
+• Hand hygiene
+• Appropriate use of personal protective equipment
+• Safe handling of equipment
+• Environmental cleanliness
+• Safe waste disposal
+• Standard precautions
 
-      Always follow approved infection prevention guidelines
-      and local clinical policies.
-    `
+Always follow approved infection prevention guidelines
+and local clinical policies.
+`
   },
   {
     id: 3,
@@ -66,22 +94,22 @@ const nursingTopics = [
     category: "Basic Nursing Skills",
     description: "Understand the importance of monitoring vital signs.",
     content: `
-      Vital signs are clinical measurements used to assess
-      important functions of the human body.
+Vital signs are clinical measurements used to assess
+important functions of the human body.
 
-      The main vital signs are:
-      • Body temperature
-      • Pulse
-      • Respiratory rate
-      • Blood pressure
+The main vital signs are:
+• Body temperature
+• Pulse
+• Respiratory rate
+• Blood pressure
 
-      Oxygen saturation is also commonly monitored.
+Oxygen saturation is also commonly monitored.
 
-      Measurements must be interpreted using the patient's
-      age, condition, clinical context and approved reference
-      ranges. Abnormal findings should be reported promptly
-      according to clinical policy.
-    `
+Measurements must be interpreted using the patient's
+age, condition, clinical context and approved reference
+ranges. Abnormal findings should be reported promptly
+according to clinical policy.
+`
   },
   {
     id: 4,
@@ -89,20 +117,20 @@ const nursingTopics = [
     category: "Professional Nursing Practice",
     description: "Explore effective communication in nursing care.",
     content: `
-      Therapeutic communication helps nurses build trust
-      and understand patients' needs.
+Therapeutic communication helps nurses build trust
+and understand patients' needs.
 
-      Important communication skills include:
-      • Active listening
-      • Respectful language
-      • Empathy
-      • Appropriate questioning
-      • Confidentiality
-      • Clear documentation
+Important communication skills include:
+• Active listening
+• Respectful language
+• Empathy
+• Appropriate questioning
+• Confidentiality
+• Clear documentation
 
-      Nurses should communicate in ways that respect
-      patients' dignity, culture and preferences.
-    `
+Nurses should communicate in ways that respect
+patients' dignity, culture and preferences.
+`
   },
   {
     id: 5,
@@ -110,20 +138,20 @@ const nursingTopics = [
     category: "Fundamentals of Nursing",
     description: "Understand basic principles of safe patient care.",
     content: `
-      Patient safety involves reducing preventable harm
-      during healthcare delivery.
+Patient safety involves reducing preventable harm
+during healthcare delivery.
 
-      Important principles include:
-      • Correct patient identification
-      • Effective communication
-      • Infection prevention
-      • Safe medication practices
-      • Accurate documentation
-      • Reporting safety concerns
+Important principles include:
+• Correct patient identification
+• Effective communication
+• Infection prevention
+• Safe medication practices
+• Accurate documentation
+• Reporting safety concerns
 
-      Always follow professional standards and facility
-      protocols.
-    `
+Always follow professional standards and facility
+protocols.
+`
   }
 ];
 
@@ -194,7 +222,14 @@ const questionBank = [
 // =========================================
 
 function saveProgress() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(progress)
+    );
+  } catch (error) {
+    console.warn("Progress could not be saved.", error);
+  }
 }
 
 function updateDashboard() {
@@ -204,18 +239,120 @@ function updateDashboard() {
 }
 
 // =========================================
+// COMPACT NAVIGATION ENGINE
+// =========================================
+
+const sections = {
+  tutor: showTutor,
+  materials: showMaterials,
+  quiz: showQuiz,
+  progress: showProgress,
+  clinical: showClinical,
+  about: showAbout
+};
+
+function setDashboardVisibility(showDashboard) {
+  const welcome = document.querySelector(".welcome");
+  const dashboard = document.querySelector(".dashboard");
+  const safety = document.querySelector(".safety-note");
+  const footer = document.querySelector(".main-footer");
+
+  welcome.style.display = showDashboard ? "" : "none";
+  dashboard.style.display = showDashboard ? "" : "none";
+  safety.style.display = showDashboard ? "" : "none";
+  footer.style.display = showDashboard ? "" : "none";
+}
+
+function updateNavigation(section) {
+  document.querySelectorAll("[data-section]").forEach(button => {
+    const active = button.dataset.section === section;
+
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+}
+
+function showDashboard() {
+  currentSection = null;
+
+  setDashboardVisibility(true);
+  updateNavigation(null);
+
+  $("workspace").innerHTML = `
+    <div class="empty-state">
+      <span>🎓</span>
+      <h2>Welcome to NurseTutor AI</h2>
+      <p>Select a learning feature from the navigation panel
+      to begin your learning session.</p>
+    </div>
+  `;
+
+  document.querySelector(".section-heading h2").textContent =
+    "Your Learning Centre";
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderWorkspace(html, backAction = showDashboard) {
+  const workspace = $("workspace");
+
+  workspace.innerHTML = html;
+
+  const backButton = document.createElement("button");
+
+  backButton.className = "back-button";
+  backButton.textContent = "← Back";
+  backButton.addEventListener("click", backAction);
+
+  workspace.prepend(backButton);
+}
+
+function openSection(section) {
+  if (!sections[section]) return;
+
+  currentSection = section;
+
+  setDashboardVisibility(false);
+  updateNavigation(section);
+
+  const titles = {
+    tutor: "Nursing Tutor",
+    materials: "Study Materials",
+    quiz: "Quiz Centre",
+    progress: "My Learning Progress",
+    clinical: "Clinical Learning",
+    about: "About NurseTutor AI"
+  };
+
+  document.querySelector(".section-heading h2").textContent =
+    titles[section];
+
+  sections[section]();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.querySelectorAll("[data-section]").forEach(button => {
+  button.addEventListener("click", () => {
+    openSection(button.dataset.section);
+  });
+});
+
+// =========================================
 // NURSING TUTOR
 // =========================================
 
 function showTutor() {
-  $("workspace").innerHTML = `
+  renderWorkspace(`
     <h2>🤖 Nursing Tutor</h2>
-    <p>Enter a nursing topic to explore available learning materials.</p>
+
+    <p>Explore available nursing topics in your offline learning library.</p>
 
     <input
       type="text"
       id="tutorInput"
       placeholder="Example: infection prevention"
+      aria-label="Enter a nursing topic"
     >
 
     <button class="action-button" id="tutorButton">
@@ -223,7 +360,7 @@ function showTutor() {
     </button>
 
     <div id="tutorResponse"></div>
-  `;
+  `);
 
   $("tutorButton").addEventListener("click", answerTutor);
 
@@ -236,7 +373,7 @@ function answerTutor() {
   const input = $("tutorInput").value.trim().toLowerCase();
 
   if (!input) {
-    $("tutorResponse").innerHTML = "<p>Please enter a topic.</p>";
+    $("tutorResponse").textContent = "Please enter a topic.";
     return;
   }
 
@@ -249,18 +386,31 @@ function answerTutor() {
 
   if (!topic) {
     $("tutorResponse").innerHTML = `
-      <p>No matching topic was found in the current offline library.</p>
-      <p>Try: nursing, infection, vital signs, communication or safety.</p>
+      <div class="learning-result">
+        <h3>No matching topic found</h3>
+        <p>Try nursing, infection, vital signs,
+        communication or safety.</p>
+      </div>
     `;
     return;
   }
 
-  $("tutorResponse").innerHTML = `
-    <div class="learning-result">
-      <h3>${topic.title}</h3>
-      <p>${topic.content.replace(/\n/g, "<br>")}</p>
-    </div>
-  `;
+  const result = document.createElement("div");
+  result.className = "learning-result";
+
+  const heading = document.createElement("h3");
+  heading.textContent = topic.title;
+
+  const category = document.createElement("p");
+  category.className = "topic-category";
+  category.textContent = topic.category;
+
+  const content = document.createElement("p");
+  content.textContent = topic.content;
+
+  result.append(heading, category, content);
+
+  $("tutorResponse").replaceChildren(result);
 }
 
 // =========================================
@@ -268,11 +418,11 @@ function answerTutor() {
 // =========================================
 
 function showMaterials() {
-  $("workspace").innerHTML = `
-    <h2>📖 Study Materials</h2>
+  renderWorkspace(`
+    <h2>📚 Study Materials</h2>
     <p>Choose a topic to begin studying.</p>
     <div id="materialsList"></div>
-  `;
+  `);
 
   const list = $("materialsList");
 
@@ -302,16 +452,16 @@ function showTopic(id) {
 
   if (!topic) return;
 
-  $("workspace").innerHTML = `
-    <button class="back-button" id="backMaterials">← Back to Topics</button>
+  renderWorkspace(`
     <h2>${topic.title}</h2>
     <p class="topic-category">${topic.category}</p>
-    <div class="learning-result">
-      <p>${topic.content.replace(/\n/g, "<br>")}</p>
-    </div>
-  `;
 
-  $("backMaterials").addEventListener("click", showMaterials);
+    <div class="learning-result">
+      <p id="topicContent"></p>
+    </div>
+  `, showMaterials);
+
+  $("topicContent").textContent = topic.content;
 }
 
 // =========================================
@@ -325,18 +475,17 @@ function showQuiz() {
   currentQuestion = 0;
   quizAnswers = [];
 
-  $("workspace").innerHTML = `
+  renderWorkspace(`
     <h2>✍️ Quiz Centre</h2>
     <p>Test your knowledge of basic nursing concepts.</p>
     <div id="quizArea"></div>
-  `;
+  `);
 
   displayQuestion();
 }
 
 function displayQuestion() {
   const question = questionBank[currentQuestion];
-
   const area = $("quizArea");
 
   area.innerHTML = `
@@ -349,7 +498,9 @@ function displayQuestion() {
     <div id="quizOptions"></div>
 
     <button class="action-button" id="nextQuestion">
-      ${currentQuestion === questionBank.length - 1 ? "Submit Quiz" : "Next Question"}
+      ${currentQuestion === questionBank.length - 1
+        ? "Submit Quiz"
+        : "Next Question"}
     </button>
   `;
 
@@ -373,7 +524,9 @@ function displayQuestion() {
   });
 
   $("nextQuestion").addEventListener("click", () => {
-    const selected = document.querySelector('input[name="quizAnswer"]:checked');
+    const selected = document.querySelector(
+      'input[name="quizAnswer"]:checked'
+    );
 
     if (!selected) {
       alert("Please select an answer.");
@@ -401,6 +554,7 @@ function showQuizResults() {
   });
 
   progress.completedQuizzes++;
+
   progress.quizHistory.push({
     date: new Date().toISOString(),
     score,
@@ -410,28 +564,46 @@ function showQuizResults() {
   saveProgress();
   updateDashboard();
 
-  let review = "";
+  renderWorkspace(`
+    <h2>🏆 Quiz Results</h2>
+
+    <h3 class="quiz-score">
+      Your Score: ${score}/${questionBank.length}
+    </h3>
+
+    <p>${Math.round(score / questionBank.length * 100)}% achieved</p>
+
+    <h3>Answer Review</h3>
+
+    <div id="answerReview"></div>
+
+    <button class="action-button" id="retryQuiz">
+      Try Again
+    </button>
+  `);
+
+  const review = $("answerReview");
 
   questionBank.forEach((question, index) => {
     const correct = quizAnswers[index] === question.answer;
 
-    review += `
-      <div class="learning-result">
-        <h3>Question ${index + 1}: ${correct ? "Correct" : "Incorrect"}</h3>
-        <p><strong>Correct answer:</strong> ${question.options[question.answer]}</p>
-        <p>${question.explanation}</p>
-      </div>
-    `;
-  });
+    const card = document.createElement("div");
+    card.className = "learning-result";
 
-  $("workspace").innerHTML = `
-    <h2>🏆 Quiz Results</h2>
-    <h3 class="quiz-score">Your Score: ${score}/${questionBank.length}</h3>
-    <p>${Math.round(score / questionBank.length * 100)}% achieved</p>
-    <h3>Answer Review</h3>
-    ${review}
-    <button class="action-button" id="retryQuiz">Try Again</button>
-  `;
+    const heading = document.createElement("h3");
+    heading.textContent =
+      `Question ${index + 1}: ${correct ? "Correct" : "Incorrect"}`;
+
+    const answer = document.createElement("p");
+    answer.textContent =
+      `Correct answer: ${question.options[question.answer]}`;
+
+    const explanation = document.createElement("p");
+    explanation.textContent = question.explanation;
+
+    card.append(heading, answer, explanation);
+    review.appendChild(card);
+  });
 
   $("retryQuiz").addEventListener("click", showQuiz);
 }
@@ -443,25 +615,45 @@ function showQuizResults() {
 function showProgress() {
   const history = progress.quizHistory || [];
 
-  let historyHTML = history.length
-    ? history.slice().reverse().map((item, index) => `
-        <div class="learning-result">
-          <strong>Quiz ${history.length - index}</strong>
-          <p>Score: ${item.score}/${item.total}</p>
-          <p>Date: ${new Date(item.date).toLocaleDateString()}</p>
-        </div>
-      `).join("")
-    : "<p>You have not completed a quiz yet.</p>";
-
-  $("workspace").innerHTML = `
+  renderWorkspace(`
     <h2>📊 My Learning Progress</h2>
+
     <div class="learning-result">
       <h3>Completed Quizzes</h3>
       <p>${progress.completedQuizzes}</p>
     </div>
+
     <h3>Quiz History</h3>
-    ${historyHTML}
-  `;
+
+    <div id="historyList"></div>
+  `);
+
+  const list = $("historyList");
+
+  if (!history.length) {
+    const message = document.createElement("p");
+    message.textContent = "You have not completed a quiz yet.";
+    list.appendChild(message);
+    return;
+  }
+
+  history.slice().reverse().forEach((item, index) => {
+    const card = document.createElement("div");
+    card.className = "learning-result";
+
+    const heading = document.createElement("h3");
+    heading.textContent = `Quiz ${history.length - index}`;
+
+    const score = document.createElement("p");
+    score.textContent = `Score: ${item.score}/${item.total}`;
+
+    const date = document.createElement("p");
+    date.textContent =
+      `Date: ${new Date(item.date).toLocaleDateString()}`;
+
+    card.append(heading, score, date);
+    list.appendChild(card);
+  });
 }
 
 // =========================================
@@ -469,25 +661,32 @@ function showProgress() {
 // =========================================
 
 function showClinical() {
-  $("workspace").innerHTML = `
+  renderWorkspace(`
     <h2>🩺 Clinical Learning</h2>
+
     <p>Explore foundational clinical learning principles.</p>
 
     <div class="learning-result">
       <h3>Clinical Observation</h3>
-      <p>Learn to observe patients carefully, collect relevant information and communicate changes to the supervising healthcare professional.</p>
+      <p>Learn to observe patients carefully, collect relevant
+      information and communicate changes to the supervising
+      healthcare professional.</p>
     </div>
 
     <div class="learning-result">
       <h3>Professional Responsibility</h3>
-      <p>Respect patient dignity, confidentiality, consent and professional boundaries.</p>
+      <p>Respect patient dignity, confidentiality, consent
+      and professional boundaries.</p>
     </div>
 
     <div class="learning-result">
       <h3>Safe Clinical Practice</h3>
-      <p>Follow approved procedures, seek supervision and report concerns promptly. Do not perform unfamiliar clinical procedures without appropriate training and supervision.</p>
+      <p>Follow approved procedures, seek supervision and
+      report concerns promptly. Do not perform unfamiliar
+      clinical procedures without appropriate training
+      and supervision.</p>
     </div>
-  `;
+  `);
 }
 
 // =========================================
@@ -495,59 +694,53 @@ function showClinical() {
 // =========================================
 
 function showAbout() {
-  $("workspace").innerHTML = `
+  renderWorkspace(`
     <h2>ℹ️ About NurseTutor AI</h2>
 
     <div class="learning-result">
       <h3>Our Purpose</h3>
-      <p>NurseTutor AI is an offline-first educational platform designed to support Registered General Nursing students in Ghana.</p>
+      <p>NurseTutor AI is an offline-first educational
+      platform designed to support Registered General
+      Nursing students in Ghana.</p>
     </div>
 
     <div class="learning-result">
       <h3>Learning Features</h3>
-      <p>Study materials, topic exploration, practice questions and learning progress tracking.</p>
+      <p>Study materials, topic exploration, practice
+      questions and learning progress tracking.</p>
     </div>
 
     <div class="learning-result">
       <h3>Offline Learning</h3>
-      <p>The current learning engine uses locally stored educational content. It does not require an external AI service.</p>
+      <p>The current learning engine uses locally stored
+      educational content. It does not require an external
+      AI service. Full offline website access will be
+      added through the PWA upgrade.</p>
+    </div>
+
+    <div class="learning-result">
+      <h3>Creator & Developer</h3>
+      <p><strong>JOE TECH</strong></p>
+      <p>NurseTutor AI is created and developed by JOE TECH.</p>
     </div>
 
     <div class="learning-result">
       <h3>Educational Disclaimer</h3>
-      <p>Always compare learning materials with your approved curriculum and guidance from qualified nursing educators.</p>
+      <p>Always compare learning materials with your
+      approved curriculum and guidance from qualified
+      nursing educators.</p>
     </div>
-  `;
+  `);
 }
-
-// =========================================
-// NAVIGATION
-// =========================================
-
-const sections = {
-  tutor: showTutor,
-  materials: showMaterials,
-  quiz: showQuiz,
-  progress: showProgress,
-  clinical: showClinical,
-  about: showAbout
-};
-
-document.querySelectorAll("[data-section]").forEach(button => {
-  button.addEventListener("click", () => {
-    const section = button.dataset.section;
-
-    if (sections[section]) {
-      sections[section]();
-    }
-  });
-});
 
 // =========================================
 // START APPLICATION
 // =========================================
 
 updateDashboard();
+showDashboard();
 
-console.log("NurseTutor AI learning engine loaded successfully.");
-    
+console.log(
+  "NurseTutor AI Version 2.0 loaded successfully."
+);
+       
